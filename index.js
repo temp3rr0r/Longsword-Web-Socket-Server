@@ -1,18 +1,21 @@
+/**/
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 5002;
+
+var verbose = false;
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket){
-	console.log("ok1: ");
   socket.on('data', function(msg){
-	console.log("ok2:");
-    io.emit('message', msg);
-	console.log("mssage" + msg);
+    	io.emit('message', msg);
+	if (verbose == true)
+		console.log("message: " + msg);
   });
 });
 
@@ -25,15 +28,16 @@ var server = net.createServer(function(socket) {
 	socket.pipe(socket);
 
   socket.on('data', function(msg){
-        console.log("ok2:");
     io.emit('message', msg.toString());
-        console.log("mssage" + msg);
+	if (verbose == true)
+	        console.log("Socket message: " + msg);
   });
 });
 
-server.listen(5001, '127.0.0.1');
+var socketPort = 5001;
+server.listen(socketPort, '127.0.0.1');
 
 http.listen(port, function(){
-  console.log('listening on *:' + port);
+  console.log('Socket server listening on *:' + socketPort + '. Web pagelistening on *:' + port);
 });
 
