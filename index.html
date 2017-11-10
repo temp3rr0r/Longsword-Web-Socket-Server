@@ -160,7 +160,8 @@ var dataTable = [[1, 32536, -32536, 14300],
           return false;
         });
         socket.on('message', function(msg){
-	drawCharts(dataTable);
+	//drawCharts(dataTable);
+	myMethod();
 //	myMethod();
           $('#messages').append($('<li>').text(msg));
          window.scrollTo(0, document.body.scrollHeight);
