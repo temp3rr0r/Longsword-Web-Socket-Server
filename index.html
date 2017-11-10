@@ -139,11 +139,14 @@ var dataTable = [[1, 32536, -32536, 14300],
 
 	var counter = 6; 
       //setInterval(myMethod, 10000);
-		function myMethod() {
-
+		function myMethod(jsonData) {
 		 
+		//console.log("jdonData: " + jsonData);
+		//console.log("jsonData str: " + jsonData["row"]);
+		//var jsonDataIn = jsonData;//JSON.parse(jsonData);
+		var jsonDataIn = JSON.parse(jsonData)['row'];
 		 dataTable.push(
-			  [counter++, (32536) * Math.random() -32536, (32536) * Math.random() -32536, (32536) * Math.random() -32536]
+			  [counter++, jsonDataIn[0], (32535) * Math.random() -32536, (32536) * Math.random() -32536]
 			);
 			drawCharts(dataTable);
 		}
@@ -161,7 +164,7 @@ var dataTable = [[1, 32536, -32536, 14300],
         });
         socket.on('message', function(msg){
 	//drawCharts(dataTable);
-	myMethod();
+	myMethod(msg);
 //	myMethod();
           $('#messages').append($('<li>').text(msg));
          window.scrollTo(0, document.body.scrollHeight);
