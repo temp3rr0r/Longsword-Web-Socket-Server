@@ -29,7 +29,7 @@
 			easing: 'in'
 		  },
 		  hAxis: {
-		  	viewWindow: {min:0, max:2},
+		  	//viewWindow: {min:0, max:5},
 		  	title: 'Timestamp'
 		  },		  
 		  vAxis: {
@@ -51,7 +51,7 @@
 			easing: 'in'
 		  },
 		  hAxis: {
-		  	viewWindow: {min:0, max:2},
+		  	//viewWindow: {min:0, max:5},
 		  	title: 'Timestamp'
 		  },		  
 		  vAxis: {
@@ -106,10 +106,10 @@
 			data.addColumn('number', 'y accel');
 			data.addColumn('number', 'z accel');
 			data.addRows(rows);
-			console.log(rows);
+			//console.log(rows);
 			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-			options.hAxis.viewWindow.min = rows.length - 4;
-			options.hAxis.viewWindow.max = rows.length;
+//			options.hAxis.viewWindow.min = rows.length - 4;
+//			options.hAxis.viewWindow.max = rows.length;
 			chart.draw(data, options);
 			
 			var gyroData = new google.visualization.DataTable();
@@ -119,8 +119,8 @@
 			gyroData.addColumn('number', 'z gyro');
 			gyroData.addRows(gyroRows);
 			var gyroChart = new google.visualization.LineChart(document.getElementById('gyro_div'));
-			gyroOptions.hAxis.viewWindow.min = rows.length - 4;
-			gyroOptions.hAxis.viewWindow.max = rows.length;
+//			gyroOptions.hAxis.viewWindow.min = rows.length - 4;
+//			gyroOptions.hAxis.viewWindow.max = rows.length;
 			gyroChart.draw(gyroData, gyroOptions);
 			
 			// TODO: bar chart, stances 0-100%
@@ -137,19 +137,19 @@
 			
 			// TODO: stance image		
 			var indexOfMaxValue = a.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-			var stanceImageString = "images/hemaStances.jpg";
+			var stanceImageString = "../images/hemaStances.jpg";
 			switch (indexOfMaxValue) {
 				case 0:
-					stanceImageString = "images/vomTag.jpg";
+					stanceImageString = "/images/vomTag.jpg";
 					break;
 				case 1:
-					stanceImageString = "images/ox.jpg";
+					stanceImageString = "/images/ox.jpg";
 					break;
 				case 2:
-					stanceImageString = "images/pflug.jpg";
+					stanceImageString = "/images/pflug.jpg";
 					break;
 				case 3:
-					stanceImageString = "images/alber.jpg";
+					stanceImageString = "/images/alber.jpg";
 					break;
 			}
 			document.getElementById('myImage').src= stanceImageString;
@@ -176,10 +176,12 @@
 		function updateCharts(jsonData) {
 		 
 			var jsonDataIn = JSON.parse(jsonData)['row'];
+			dataTable.shift();
 			dataTable.push(
 				[counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
 			);
 
+			gyroDataTable.shift();
                         gyroDataTable.push(
                                 [counter++, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
                         );
