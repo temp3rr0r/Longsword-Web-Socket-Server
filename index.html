@@ -138,15 +138,11 @@ var dataTable = [[1, 32536, -32536, 14300],
       }
 
 	var counter = 6; 
-      //setInterval(myMethod, 10000);
 		function myMethod(jsonData) {
 		 
-		//console.log("jdonData: " + jsonData);
-		//console.log("jsonData str: " + jsonData["row"]);
-		//var jsonDataIn = jsonData;//JSON.parse(jsonData);
 		var jsonDataIn = JSON.parse(jsonData)['row'];
 		 dataTable.push(
-			  [counter++, jsonDataIn[0], (32535) * Math.random() -32536, (32536) * Math.random() -32536]
+			  [counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
 			);
 			drawCharts(dataTable);
 		}
@@ -155,19 +151,15 @@ var dataTable = [[1, 32536, -32536, 14300],
 
       $(function () {
         var socket = io();
-//	myMethod();
         $('form').submit(function(){
-//		myMethod();
           socket.emit('message', $('#m').val());
           $('#m').val('');
           return false;
         });
         socket.on('message', function(msg){
-	//drawCharts(dataTable);
 	myMethod(msg);
-//	myMethod();
-          $('#messages').append($('<li>').text(msg));
-         window.scrollTo(0, document.body.scrollHeight);
+         // $('#messages').append($('<li>').text(msg));
+        // window.scrollTo(0, document.body.scrollHeight);
                
 
 
@@ -175,7 +167,6 @@ var dataTable = [[1, 32536, -32536, 14300],
       });
 
 
-//     google.charts.setOnLoadCallback(drawCharts(dataTable));
 
     </script>
   </head>
