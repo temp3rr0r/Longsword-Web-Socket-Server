@@ -14,9 +14,15 @@
       #messages { margin-bottom: 40px }
     </style>
     <!--Load the AJAX API-->
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+//google.load("visualization", "1", {packages:["corechart", "gauge"]});
 		google.charts.load('current', {'packages':['corechart', 'gauge']});
+
+  //   google.charts.setOnLoadCallback(drawCharts(dataTable));
+
 		var options = {'title':'Near real-time accelerometer data',
 		  width: 600,
 		  height: 300,
@@ -59,7 +65,7 @@
           minorTicks: 5
         };
 		
-		var dataTable = [[1, 32536, -32536, 14300],
+var dataTable = [[1, 32536, -32536, 14300],
           [2, 5260, -21150, 14000],
           [3, 3100, 2250, 12200],
           [4, -21500, 24050, 11800],
@@ -75,7 +81,7 @@
         data.addColumn('number', 'z accel');
         data.addRows(rows);
         console.log(rows);
-	    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         options.hAxis.viewWindow.min = rows.length - 4;
         options.hAxis.viewWindow.max = rows.length;
         chart.draw(data, options);
@@ -132,15 +138,41 @@
       }
 
 	var counter = 6; 
-      setInterval(myMethod, 750);
+      //setInterval(myMethod, 10000);
 		function myMethod() {
 
-		  //dataTable.shift()
-		  dataTable.push(
+		 
+		 dataTable.push(
 			  [counter++, (32536) * Math.random() -32536, (32536) * Math.random() -32536, (32536) * Math.random() -32536]
 			);
 			drawCharts(dataTable);
 		}
+
+	//myMethod();
+
+      $(function () {
+        var socket = io();
+//	myMethod();
+        $('form').submit(function(){
+//		myMethod();
+          socket.emit('message', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+        socket.on('message', function(msg){
+	drawCharts(dataTable);
+//	myMethod();
+          $('#messages').append($('<li>').text(msg));
+         window.scrollTo(0, document.body.scrollHeight);
+               
+
+
+        });
+      });
+
+
+//     google.charts.setOnLoadCallback(drawCharts(dataTable));
+
     </script>
   </head>
 
@@ -156,24 +188,5 @@
     	<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
 	</div>
 	   <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-      $(function () {
-        var socket = io();
-        $('form').submit(function(){
-          socket.emit('message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('message', function(msg){
-          $('#messages').append($('<li>').text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
-      });
-    </script>
   </body>
 </html>
