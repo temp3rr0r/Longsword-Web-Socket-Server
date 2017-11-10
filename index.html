@@ -65,11 +65,11 @@
           minorTicks: 5
         };
 		
-var dataTable = [[1, 32536, -32536, 14300],
-          [2, 5260, -21150, 14000],
-          [3, 3100, 2250, 12200],
-          [4, -21500, 24050, 11800],
-          [5, -25000, 10050, 11400]
+var dataTable = [[1, 32536, -32536, 14300, 0, 0, 0],
+          [2, 5260, -21150, 14000, 0, 0, 0],
+          [3, 3100, 2250, 12200, 0, 0, 0],
+          [4, -21500, 24050, 11800, 0, 0, 0],
+          [5, -25000, 10050, 11400, 0, 0, 0]
         ];
 		
       function drawCharts(rows) {      
@@ -79,6 +79,10 @@ var dataTable = [[1, 32536, -32536, 14300],
         data.addColumn('number', 'x accel');
         data.addColumn('number', 'y accel');
         data.addColumn('number', 'z accel');
+        data.addColumn('number', 'x gyro');
+        data.addColumn('number', 'y gyro');
+        data.addColumn('number', 'z gyro');
+
         data.addRows(rows);
         console.log(rows);
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -142,7 +146,7 @@ var dataTable = [[1, 32536, -32536, 14300],
 		 
 		var jsonDataIn = JSON.parse(jsonData)['row'];
 		 dataTable.push(
-			  [counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
+			  [counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2], jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
 			);
 			drawCharts(dataTable);
 		}
