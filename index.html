@@ -1,8 +1,8 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
-    <style>
+  <title>Socket.IO chat</title>
+      <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
@@ -13,9 +13,149 @@
       #messages li:nth-child(odd) { background: #eee; }
       #messages { margin-bottom: 40px }
     </style>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+		google.charts.load('current', {'packages':['corechart', 'gauge']});
+		var options = {'title':'Near real-time accelerometer data',
+		  width: 600,
+		  height: 300,
+		  vAxis: {minValue:-32536, maxValue:+32536},
+		  animation: {
+			duration: 500,
+			easing: 'in'
+		  },
+		  hAxis: {
+		  	viewWindow: {min:0, max:2},
+		  	title: 'Timestamp'
+		  },		  
+		  vAxis: {
+          	title: 'Sensor Value (-32536 to +32536)',
+			  viewWindowMode:'explicit',
+              viewWindow:{
+                max:32536,
+                min:-32536
+              }
+		  }
+		};
+		
+	   var barChartOptions = {'title':'Guard stance accuracy',
+		  width: 600,
+		  height: 300,
+		  animation:{
+			duration: 500,
+			easing: 'in',
+		  },
+		  vAxis: {minValue:0, maxValue:100, title: 'Accuracy x%'},		  
+		  hAxis: {
+		  	title: 'Guard stance'
+		  },
+		};
+		
+		var gaugeOptions = {
+          width: 400, height: 120,
+          redFrom: 0, redTo: 25,
+          greenFrom:25, greenTo: 50,
+          minorTicks: 5
+        };
+		
+		var dataTable = [[1, 32536, -32536, 14300],
+          [2, 5260, -21150, 14000],
+          [3, 3100, 2250, 12200],
+          [4, -21500, 24050, 11800],
+          [5, -25000, 10050, 11400]
+        ];
+		
+      function drawCharts(rows) {      
+      
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Time');
+        data.addColumn('number', 'x accel');
+        data.addColumn('number', 'y accel');
+        data.addColumn('number', 'z accel');
+        data.addRows(rows);
+        console.log(rows);
+	    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        options.hAxis.viewWindow.min = rows.length - 4;
+        options.hAxis.viewWindow.max = rows.length;
+        chart.draw(data, options);
+        
+        // TODO: bar chart, stances 0-100%
+    	var a = [(100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1];
+        var barChartData = new google.visualization.DataTable();
+		barChartData.addColumn('string', 'N');
+		barChartData.addColumn('number', '%');		
+		barChartData.addRow(['Vom Tag', (100) * Math.random() + 1]);
+		barChartData.addRow(['Ox', (100) * Math.random() + 1]);
+		barChartData.addRow(['Pflug', (100) * Math.random() + 1]);
+		barChartData.addRow(['Alber', (100) * Math.random() + 1]);
+		var barChart = new google.visualization.ColumnChart(document.getElementById('barChart_div'));
+		barChart.draw(barChartData, barChartOptions);
+		
+		// TODO: gauge		
+
+		// TODO: stance image		
+		var indexOfMaxValue = a.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+		var stanceImageString = "images/hemaStances.jpg";
+		switch (indexOfMaxValue) {
+			case 0:
+				stanceImageString = "images/vomTag.jpg";
+				break;
+			case 1:
+				stanceImageString = "images/ox.jpg";
+				break;
+			case 2:
+				stanceImageString = "images/pflug.jpg";
+				break;
+			case 3:
+				stanceImageString = "images/alber.jpg";
+				break;
+		}
+		document.getElementById('myImage').src= stanceImageString;
+		
+		// Gauge
+		var gaugeValue = (100) * Math.random() + 1;
+		document.getElementById("gauge_value").innerHTML = gaugeValue.toFixed(2) + " %";
+		if (gaugeValue > 50)
+			document.getElementById("gauge_value").style.color = "blue";
+		else if (gaugeValue < 25)
+			document.getElementById("gauge_value").style.color = "red";
+		else
+			document.getElementById("gauge_value").style.color = "green";
+		
+		 var gaugeData = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Score', gaugeValue]
+        ]);        
+        var gaugeChart = new google.visualization.Gauge(document.getElementById('gauge_div'));
+        gaugeChart.draw(gaugeData, gaugeOptions);
+      }
+
+	var counter = 6; 
+      setInterval(myMethod, 750);
+		function myMethod() {
+
+		  //dataTable.shift()
+		  dataTable.push(
+			  [counter++, (32536) * Math.random() -32536, (32536) * Math.random() -32536, (32536) * Math.random() -32536]
+			);
+			drawCharts(dataTable);
+		}
+    </script>
   </head>
-  <body>
-    <ul id="messages"></ul>
+
+  <body>    
+  	<div style="width: 100%; overflow: hidden;" style="float: left;">	
+    	<div id="barChart_div" style="float: left;"></div>
+    	<div id="chart_div" style="float: left;"></div>
+    </div>
+    
+	<div align="right">		
+		<div style="float: left;" id="gauge_div"></div>
+	  	<h1 id="gauge_value" style="float: left;">0 %</h1>
+    	<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
+	</div>
+	   <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
