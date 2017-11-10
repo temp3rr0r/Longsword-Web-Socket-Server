@@ -18,12 +18,31 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-//google.load("visualization", "1", {packages:["corechart", "gauge"]});
+	
 		google.charts.load('current', {'packages':['corechart', 'gauge']});
-
-  //   google.charts.setOnLoadCallback(drawCharts(dataTable));
-
 		var options = {'title':'Near real-time accelerometer data',
+		  width: 600,
+		  height: 300,
+		  vAxis: {minValue:-32536, maxValue:+32536},
+		  animation: {
+			duration: 500,
+			easing: 'in'
+		  },
+		  hAxis: {
+		  	viewWindow: {min:0, max:2},
+		  	title: 'Timestamp'
+		  },		  
+		  vAxis: {
+          	title: 'Sensor Value (-32536 to +32536)',
+			  viewWindowMode:'explicit',
+              viewWindow:{
+                max:32536,
+                min:-32536
+              }
+		  }
+		};
+		
+		var gyroOptions = {'title':'Near real-time gyroscope data',
 		  width: 600,
 		  height: 300,
 		  vAxis: {minValue:-32536, maxValue:+32536},
@@ -65,93 +84,108 @@
           minorTicks: 5
         };
 		
-var dataTable = [[1, 32536, -32536, 14300, 0, 0, 0],
-          [2, 5260, -21150, 14000, 0, 0, 0],
-          [3, 3100, 2250, 12200, 0, 0, 0],
-          [4, -21500, 24050, 11800, 0, 0, 0],
-          [5, -25000, 10050, 11400, 0, 0, 0]
+		var dataTable = [[1, 32536, -32536, 14300],
+          [2, 5260, -21150, 14000],
+          [3, 3100, 2250, 12200],
+          [4, -21500, 24050, 11800],
+          [5, -25000, 10050, 11400]
         ];
-		
-      function drawCharts(rows) {      
+
+                var gyroDataTable = [[1, 32536, -32536, 14300],
+          [2, 5260, -21150, 14000],
+          [3, 3100, 2250, 12200],
+          [4, -21500, 24050, 11800],
+          [5, -25000, 10050, 11400]
+        ];
+	
+		function drawCharts(rows, gyroRows) {      
       
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'Time');
-        data.addColumn('number', 'x accel');
-        data.addColumn('number', 'y accel');
-        data.addColumn('number', 'z accel');
-        data.addColumn('number', 'x gyro');
-        data.addColumn('number', 'y gyro');
-        data.addColumn('number', 'z gyro');
-
-        data.addRows(rows);
-        console.log(rows);
-    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        options.hAxis.viewWindow.min = rows.length - 4;
-        options.hAxis.viewWindow.max = rows.length;
-        chart.draw(data, options);
-        
-        // TODO: bar chart, stances 0-100%
-    	var a = [(100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1];
-        var barChartData = new google.visualization.DataTable();
-		barChartData.addColumn('string', 'N');
-		barChartData.addColumn('number', '%');		
-		barChartData.addRow(['Vom Tag', (100) * Math.random() + 1]);
-		barChartData.addRow(['Ox', (100) * Math.random() + 1]);
-		barChartData.addRow(['Pflug', (100) * Math.random() + 1]);
-		barChartData.addRow(['Alber', (100) * Math.random() + 1]);
-		var barChart = new google.visualization.ColumnChart(document.getElementById('barChart_div'));
-		barChart.draw(barChartData, barChartOptions);
-		
-		// TODO: gauge		
-
-		// TODO: stance image		
-		var indexOfMaxValue = a.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-		var stanceImageString = "images/hemaStances.jpg";
-		switch (indexOfMaxValue) {
-			case 0:
-				stanceImageString = "images/vomTag.jpg";
-				break;
-			case 1:
-				stanceImageString = "images/ox.jpg";
-				break;
-			case 2:
-				stanceImageString = "images/pflug.jpg";
-				break;
-			case 3:
-				stanceImageString = "images/alber.jpg";
-				break;
+			var data = new google.visualization.DataTable();
+			data.addColumn('number', 'Time');
+			data.addColumn('number', 'x accel');
+			data.addColumn('number', 'y accel');
+			data.addColumn('number', 'z accel');
+			data.addRows(rows);
+			console.log(rows);
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+			options.hAxis.viewWindow.min = rows.length - 4;
+			options.hAxis.viewWindow.max = rows.length;
+			chart.draw(data, options);
+			
+			var gyroData = new google.visualization.DataTable();
+			gyroData.addColumn('number', 'Time');
+			gyroData.addColumn('number', 'x gyro');
+			gyroData.addColumn('number', 'y gyro');
+			gyroData.addColumn('number', 'z gyro');
+			gyroData.addRows(gyroRows);
+			var gyroChart = new google.visualization.LineChart(document.getElementById('gyro_div'));
+			gyroOptions.hAxis.viewWindow.min = rows.length - 4;
+			gyroOptions.hAxis.viewWindow.max = rows.length;
+			gyroChart.draw(gyroData, gyroOptions);
+			
+			// TODO: bar chart, stances 0-100%
+			var a = [(100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1];
+			var barChartData = new google.visualization.DataTable();
+			barChartData.addColumn('string', 'N');
+			barChartData.addColumn('number', '%');		
+			barChartData.addRow(['Vom Tag', (100) * Math.random() + 1]);
+			barChartData.addRow(['Ox', (100) * Math.random() + 1]);
+			barChartData.addRow(['Pflug', (100) * Math.random() + 1]);
+			barChartData.addRow(['Alber', (100) * Math.random() + 1]);
+			var barChart = new google.visualization.ColumnChart(document.getElementById('barChart_div'));
+			barChart.draw(barChartData, barChartOptions);
+			
+			// TODO: stance image		
+			var indexOfMaxValue = a.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+			var stanceImageString = "images/hemaStances.jpg";
+			switch (indexOfMaxValue) {
+				case 0:
+					stanceImageString = "images/vomTag.jpg";
+					break;
+				case 1:
+					stanceImageString = "images/ox.jpg";
+					break;
+				case 2:
+					stanceImageString = "images/pflug.jpg";
+					break;
+				case 3:
+					stanceImageString = "images/alber.jpg";
+					break;
+			}
+			document.getElementById('myImage').src= stanceImageString;
+			
+			// Gauge
+			var gaugeValue = (100) * Math.random() + 1;
+			document.getElementById("gauge_value").innerHTML = gaugeValue.toFixed(2) + " %";
+			if (gaugeValue > 50)
+				document.getElementById("gauge_value").style.color = "blue";
+			else if (gaugeValue < 25)
+				document.getElementById("gauge_value").style.color = "red";
+			else
+				document.getElementById("gauge_value").style.color = "green";
+			
+			 var gaugeData = google.visualization.arrayToDataTable([
+			  ['Label', 'Value'],
+			  ['Score', gaugeValue]
+			]);        
+			var gaugeChart = new google.visualization.Gauge(document.getElementById('gauge_div'));
+			gaugeChart.draw(gaugeData, gaugeOptions);
 		}
-		document.getElementById('myImage').src= stanceImageString;
-		
-		// Gauge
-		var gaugeValue = (100) * Math.random() + 1;
-		document.getElementById("gauge_value").innerHTML = gaugeValue.toFixed(2) + " %";
-		if (gaugeValue > 50)
-			document.getElementById("gauge_value").style.color = "blue";
-		else if (gaugeValue < 25)
-			document.getElementById("gauge_value").style.color = "red";
-		else
-			document.getElementById("gauge_value").style.color = "green";
-		
-		 var gaugeData = google.visualization.arrayToDataTable([
-          ['Label', 'Value'],
-          ['Score', gaugeValue]
-        ]);        
-        var gaugeChart = new google.visualization.Gauge(document.getElementById('gauge_div'));
-        gaugeChart.draw(gaugeData, gaugeOptions);
-      }
 
-	var counter = 6; 
-		function myMethod(jsonData) {
+		var counter = 6; 
+		function updateCharts(jsonData) {
 		 
-		var jsonDataIn = JSON.parse(jsonData)['row'];
-		 dataTable.push(
-			  [counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2], jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
+			var jsonDataIn = JSON.parse(jsonData)['row'];
+			dataTable.push(
+				[counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
 			);
-			drawCharts(dataTable);
-		}
 
-	//myMethod();
+                        gyroDataTable.push(
+                                [counter++, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
+                        );
+
+			drawCharts(dataTable, gyroDataTable);
+		}
 
       $(function () {
         var socket = io();
@@ -161,31 +195,24 @@ var dataTable = [[1, 32536, -32536, 14300, 0, 0, 0],
           return false;
         });
         socket.on('message', function(msg){
-	myMethod(msg);
-         // $('#messages').append($('<li>').text(msg));
-        // window.scrollTo(0, document.body.scrollHeight);
-               
-
+		updateCharts(msg);
 
         });
       });
-
-
-
     </script>
-  </head>
+	</head>
+	<body>    
+		<div style="width: 100%; overflow: hidden;" style="float: left;">	
+			<div id="barChart_div" style="float: left;"></div>
+			<div id="chart_div" style="float: left;"></div>
+			<div id="gyro_div" style="float: left;"></div>
+		</div>
 
-  <body>    
-  	<div style="width: 100%; overflow: hidden;" style="float: left;">	
-    	<div id="barChart_div" style="float: left;"></div>
-    	<div id="chart_div" style="float: left;"></div>
-    </div>
-    
 	<div align="right">		
 		<div style="float: left;" id="gauge_div"></div>
-	  	<h1 id="gauge_value" style="float: left;">0 %</h1>
-    	<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
+		<h1 id="gauge_value" style="float: left;">0 %</h1>
+		<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
 	</div>
-	   <ul id="messages"></ul>
-  </body>
+	<ul id="messages"></ul>
+	</body>
 </html>
