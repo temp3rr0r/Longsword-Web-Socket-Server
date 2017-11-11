@@ -98,7 +98,7 @@
           [5, -25000, 10050, 11400]
         ];
 	
-		function drawCharts(rows, gyroRows) {      
+		function drawCharts(rows, gyroRows, classIndex, classConfidence) {      
       
 			var data = new google.visualization.DataTable();
 			data.addColumn('number', 'Time');
@@ -124,7 +124,6 @@
 			gyroChart.draw(gyroData, gyroOptions);
 			
 			// TODO: bar chart, stances 0-100%
-			var a = [(100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1, (100) * Math.random() + 1];
 			var barChartData = new google.visualization.DataTable();
 			barChartData.addColumn('string', 'N');
 			barChartData.addColumn('number', '%');		
@@ -136,26 +135,24 @@
 			barChart.draw(barChartData, barChartOptions);
 			
 			// TODO: stance image		
-			var indexOfMaxValue = a.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-			var stanceImageString = "../images/hemaStances.jpg";
-			switch (indexOfMaxValue) {
+			switch (classIndex) {
 				case 0:
 					stanceImageString = "/images/vomTag.jpg";
 					break;
-				case 1:
+				case 2:
 					stanceImageString = "/images/ox.jpg";
 					break;
-				case 2:
+				case 1:
 					stanceImageString = "/images/pflug.jpg";
 					break;
-				case 3:
+				default:
 					stanceImageString = "/images/alber.jpg";
 					break;
 			}
 			document.getElementById('myImage').src= stanceImageString;
 			
 			// Gauge
-			var gaugeValue = (100) * Math.random() + 1;
+			var gaugeValue = classConfidence * 100;
 			document.getElementById("gauge_value").innerHTML = gaugeValue.toFixed(2) + " %";
 			if (gaugeValue > 50)
 				document.getElementById("gauge_value").style.color = "blue";
@@ -176,6 +173,8 @@
 		function updateCharts(jsonData) {
 		 
 			var jsonDataIn = JSON.parse(jsonData)['row'];
+			var classIndexIn = JSON.parse(jsonData)['predictedClass'];
+			var classConfidence = JSON.parse(jsonData)['confidence']
 			dataTable.shift();
 			dataTable.push(
 				[counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
@@ -186,7 +185,7 @@
                                 [counter++, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
                         );
 
-			drawCharts(dataTable, gyroDataTable);
+			drawCharts(dataTable, gyroDataTable, classIndexIn, classConfidence);
 		}
 
       $(function () {
@@ -218,3 +217,4 @@
 	<ul id="messages"></ul>
 	</body>
 </html>
+
