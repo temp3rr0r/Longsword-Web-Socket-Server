@@ -84,7 +84,7 @@
           minorTicks: 5
         };
 		
-		var dataTable = [[1, 32536, -32536, 14300],
+		var dataTable = [[1.2, 32536, -32536, 14300],
           [2, 5260, -21150, 14000],
           [3, 3100, 2250, 12200],
           [4, -21500, 24050, 11800],
@@ -95,7 +95,7 @@
           [9, -21500, 24050, 11800],
           [10, -25000, 10050, 11400]      ];
 
-                var gyroDataTable = [[1, 32536, -32536, 14300],
+                var gyroDataTable = [[1.2, 32536, -32536, 14300],
           [2, 5260, -21150, 14000],
           [3, 3100, 2250, 12200],
           [4, -21500, 24050, 11800],
@@ -177,12 +177,19 @@
 			gaugeChart.draw(gaugeData, gaugeOptions);
 		}
 
-		var counter = 11; 
+		var counter = 11.2; 
 		function updateCharts(jsonData) {
 		 
 			var jsonDataIn = JSON.parse(jsonData)['row'];
+
+			// TODO: replace counter with timestamp
+			var timeStampIn = JSON.parse(jsonData)['timestamp'];
+			counter = parseFloat(timeStampIn);
+
 			var classIndexIn = JSON.parse(jsonData)['predictedClass'];
-			var classConfidence = JSON.parse(jsonData)['confidence']
+			var classConfidence = JSON.parse(jsonData)['confidence'];
+
+
 			dataTable.shift();
 			dataTable.push(
 				[counter, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
@@ -190,7 +197,7 @@
 
 			gyroDataTable.shift();
                         gyroDataTable.push(
-                                [counter++, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
+                                [counter, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
                         );
 
 			drawCharts(dataTable, gyroDataTable, classIndexIn, classConfidence);
