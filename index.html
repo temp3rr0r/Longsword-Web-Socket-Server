@@ -20,7 +20,7 @@
     <script type="text/javascript">
 	
 		google.charts.load('current', {'packages':['corechart', 'gauge']});
-		var options = {'title':'Near real-time accelerometer data',
+		var options = {'title':'Accelerometer',
 		  width: 600,
 		  height: 300,
 		  vAxis: {minValue:-32536, maxValue:+32536},
@@ -30,7 +30,7 @@
 		  },
 		  hAxis: {
 		  	//viewWindow: {min:0, max:5},
-		  	title: 'Timestamp'
+		  	title: 'Time (seconds)'
 		  },		  
 		  vAxis: {
           	title: 'Sensor Value (-32536 to +32536)',
@@ -42,7 +42,7 @@
 		  }
 		};
 		
-		var gyroOptions = {'title':'Near real-time gyroscope data',
+		var gyroOptions = {'title':'Gyroscope',
 		  width: 600,
 		  height: 300,
 		  vAxis: {minValue:-32536, maxValue:+32536},
@@ -52,7 +52,7 @@
 		  },
 		  hAxis: {
 		  	//viewWindow: {min:0, max:5},
-		  	title: 'Timestamp'
+		  	title: 'Time (seconds)'
 		  },		  
 		  vAxis: {
           	title: 'Sensor Value (-32536 to +32536)',
@@ -64,7 +64,7 @@
 		  }
 		};
 		
-	   var barChartOptions = {'title':'Guard stance accuracy',
+	   var barChartOptions = {'title':'Stance accuracy',
 		  width: 600,
 		  height: 300,
 		  animation:{
