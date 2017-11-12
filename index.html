@@ -84,27 +84,29 @@
           minorTicks: 5
         };
 		
-		var dataTable = [[1.2, 32536, -32536, 14300],
-          [2, 5260, -21150, 14000],
-          [3, 3100, 2250, 12200],
-          [4, -21500, 24050, 11800],
-          [5, -25000, 10050, 11400]
-	  [6, 32536, -32536, 14300],
-          [7, 5260, -21150, 14000],
-          [8, 3100, 2250, 12200],
-          [9, -21500, 24050, 11800],
-          [10, -25000, 10050, 11400]      ];
+var startTimestampSeconds = Math.floor(Date.now() / 1000);
 
-                var gyroDataTable = [[1.2, 32536, -32536, 14300],
-          [2, 5260, -21150, 14000],
-          [3, 3100, 2250, 12200],
-          [4, -21500, 24050, 11800],
-          [5, -25000, 10050, 11400],
-	  [6, 32536, -32536, 14300],
-          [7, 5260, -21150, 14000],
-          [8, 3100, 2250, 12200],
-          [9, -21500, 24050, 11800],
-          [10, -25000, 10050, 11400]];
+var dataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
+	[startTimestampSeconds - 9, 5260, -21150, 14000],
+	[startTimestampSeconds - 8, 3100, 2250, 12200],
+	[startTimestampSeconds - 7, -21500, 24050, 11800],
+	[startTimestampSeconds - 6, -25000, 10050, 11400]
+	[startTimestampSeconds - 5, 32536, -32536, 14300],
+	[startTimestampSeconds - 4, 5260, -21150, 14000],
+	[startTimestampSeconds - 3, 3100, 2250, 12200],
+	[startTimestampSeconds - 2, -21500, 24050, 11800],
+	[startTimestampSeconds - 1, -25000, 10050, 11400]];
+
+var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
+	[startTimestampSeconds - 9, 5260, -21150, 14000],
+	[startTimestampSeconds - 8, 3100, 2250, 12200],
+	[startTimestampSeconds - 7, -21500, 24050, 11800],
+	[startTimestampSeconds - 6, -25000, 10050, 11400]
+	[startTimestampSeconds - 5, 32536, -32536, 14300],
+	[startTimestampSeconds - 4, 5260, -21150, 14000],
+	[startTimestampSeconds - 3, 3100, 2250, 12200],
+	[startTimestampSeconds - 2, -21500, 24050, 11800],
+	[startTimestampSeconds - 1, -25000, 10050, 11400]];
 	
 		function drawCharts(rows, gyroRows, classIndex, classConfidence) {      
       
@@ -142,7 +144,6 @@
 			var barChart = new google.visualization.ColumnChart(document.getElementById('barChart_div'));
 			barChart.draw(barChartData, barChartOptions);
 			
-			// TODO: stance image		
 			switch (classIndex) {
 				case 0:
 					stanceImageString = "/images/vomTag.jpg";
@@ -177,28 +178,19 @@
 			gaugeChart.draw(gaugeData, gaugeOptions);
 		}
 
-		var counter = 11.2; 
+		//var startTimestampSeconds = Math.floor(Date.now() / 1000);
 		function updateCharts(jsonData) {
 		 
 			var jsonDataIn = JSON.parse(jsonData)['row'];
-
-			// TODO: replace counter with timestamp
-			var timeStampIn = JSON.parse(jsonData)['timestamp'];
-			counter = parseFloat(timeStampIn);
-
+			var timeStampIn = parseFloat(JSON.parse(jsonData)['timestamp']) - startTimestampSeconds;
 			var classIndexIn = JSON.parse(jsonData)['predictedClass'];
 			var classConfidence = JSON.parse(jsonData)['confidence'];
 
-
 			dataTable.shift();
-			dataTable.push(
-				[counter, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
-			);
+			dataTable.push([timeStampIn, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]);
 
 			gyroDataTable.shift();
-                        gyroDataTable.push(
-                                [counter, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]
-                        );
+                        gyroDataTable.push([timeStampIn, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]);
 
 			drawCharts(dataTable, gyroDataTable, classIndexIn, classConfidence);
 		}
