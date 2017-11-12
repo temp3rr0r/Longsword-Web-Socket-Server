@@ -89,14 +89,22 @@
           [3, 3100, 2250, 12200],
           [4, -21500, 24050, 11800],
           [5, -25000, 10050, 11400]
-        ];
+	  [6, 32536, -32536, 14300],
+          [7, 5260, -21150, 14000],
+          [8, 3100, 2250, 12200],
+          [9, -21500, 24050, 11800],
+          [10, -25000, 10050, 11400]      ];
 
                 var gyroDataTable = [[1, 32536, -32536, 14300],
           [2, 5260, -21150, 14000],
           [3, 3100, 2250, 12200],
           [4, -21500, 24050, 11800],
-          [5, -25000, 10050, 11400]
-        ];
+          [5, -25000, 10050, 11400],
+	  [6, 32536, -32536, 14300],
+          [7, 5260, -21150, 14000],
+          [8, 3100, 2250, 12200],
+          [9, -21500, 24050, 11800],
+          [10, -25000, 10050, 11400]];
 	
 		function drawCharts(rows, gyroRows, classIndex, classConfidence) {      
       
@@ -169,7 +177,7 @@
 			gaugeChart.draw(gaugeData, gaugeOptions);
 		}
 
-		var counter = 6; 
+		var counter = 11; 
 		function updateCharts(jsonData) {
 		 
 			var jsonDataIn = JSON.parse(jsonData)['row'];
@@ -177,7 +185,7 @@
 			var classConfidence = JSON.parse(jsonData)['confidence']
 			dataTable.shift();
 			dataTable.push(
-				[counter++, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
+				[counter, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]
 			);
 
 			gyroDataTable.shift();
