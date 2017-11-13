@@ -177,14 +177,18 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			var gaugeChart = new google.visualization.Gauge(document.getElementById('gauge_div'));
 			gaugeChart.draw(gaugeData, gaugeOptions);
 		}
-
-		//var startTimestampSeconds = Math.floor(Date.now() / 1000);
+		
 		function updateCharts(jsonData) {
 		 
 			var jsonDataIn = JSON.parse(jsonData)['row'];
-			var timeStampIn = parseFloat(JSON.parse(jsonData)['timestamp']) - startTimestampSeconds;
+			var timeStampIn = parseFloat(JSON.parse(jsonData)['timestamp']);
 			var classIndexIn = JSON.parse(jsonData)['predictedClass'];
 			var classConfidence = JSON.parse(jsonData)['confidence'];
+			
+			var latencyValue = (Date.now()/1000) - timeStampIn;
+			document.getElementById("latency_value").innerHTML = latencyValue.toFixed(3) + " seconds";
+
+			timeStampIn -= startTimestampSeconds; // Remove the starting time UTC for second graph numbers X
 
 			dataTable.shift();
 			dataTable.push([timeStampIn, jsonDataIn[0], jsonDataIn[1], jsonDataIn[2]]);
@@ -218,7 +222,8 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 
 	<div align="right">		
 		<div style="float: left;" id="gauge_div"></div>
-		<h1 id="gauge_value" style="float: left;">0 %</h1>
+		<h1 id="gauge_value" style="float: left;"></h1>
+		<h2 id="latency_value" style="float: left;"></h2>
 		<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
 	</div>
 	<ul id="messages"></ul>
