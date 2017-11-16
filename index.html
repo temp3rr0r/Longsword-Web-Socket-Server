@@ -108,7 +108,7 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 	[startTimestampSeconds - 2, -21500, 24050, 11800],
 	[startTimestampSeconds - 1, -25000, 10050, 11400]];
 	
-		function drawCharts(rows, gyroRows, classIndex, classConfidence) {      
+		function drawCharts(rows, gyroRows, classIndex, classConfidence, classAccuracy) {      
       
 			var data = new google.visualization.DataTable();
 			data.addColumn('number', 'Time');
@@ -137,10 +137,10 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			var barChartData = new google.visualization.DataTable();
 			barChartData.addColumn('string', 'N');
 			barChartData.addColumn('number', '%');		
-			barChartData.addRow(['Vom Tag', (100) * Math.random() + 1]);
-			barChartData.addRow(['Ox', (100) * Math.random() + 1]);
-			barChartData.addRow(['Pflug', (100) * Math.random() + 1]);
-			barChartData.addRow(['Alber', (100) * Math.random() + 1]);
+			barChartData.addRow(['Vom Tag', 100 * classAccuracy[0]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['Ox', 100 * classAccuracy[1]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['Pflug', 100 * classAccuracy[2]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['Alber', 100 * classAccuracy[3]]);//(100) * Math.random() + 1]);
 			var barChart = new google.visualization.ColumnChart(document.getElementById('barChart_div'));
 			barChart.draw(barChartData, barChartOptions);
 			
@@ -184,6 +184,9 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			var timeStampIn = parseFloat(JSON.parse(jsonData)['timestamp']);
 			var classIndexIn = JSON.parse(jsonData)['predictedClass'];
 			var classConfidence = JSON.parse(jsonData)['confidence'];
+			var classAccuracy = JSON.parse(jsonData)['classAccuracy'];
+			console.log("jsonData: " + jsonData);
+			console.log("classAccuracy: " + classAccuracy);
 			
 			var latencyValue = (Date.now()/1000) - timeStampIn;
 			document.getElementById("latency_value").innerHTML = latencyValue.toFixed(3) + " seconds";
@@ -196,7 +199,7 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			gyroDataTable.shift();
                         gyroDataTable.push([timeStampIn, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]);
 
-			drawCharts(dataTable, gyroDataTable, classIndexIn, classConfidence);
+			drawCharts(dataTable, gyroDataTable, classIndexIn, classConfidence, classAccuracy);
 		}
 
       $(function () {
