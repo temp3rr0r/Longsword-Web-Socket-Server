@@ -64,16 +64,16 @@
 		  }
 		};
 		
-	   var barChartOptions = {'title':'Stance accuracy',
+	   var barChartOptions = {'title':'Technique Accuracy',
 		  width: 600,
 		  height: 300,
 		  animation:{
 			duration: 500,
 			easing: 'in',
 		  },
-		  vAxis: {minValue:0, maxValue:100, title: 'Accuracy x%'},		  
+		  vAxis: {minValue:0, maxValue:100, title: 'Class Accuracy(%)'},		  
 		  hAxis: {
-		  	title: 'Guard stance'
+		  	title: 'Technique'
 		  },
 		};
 		
@@ -108,7 +108,7 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 	[startTimestampSeconds - 2, -21500, 24050, 11800],
 	[startTimestampSeconds - 1, -25000, 10050, 11400]];
 	
-		function drawCharts(rows, gyroRows, classIndex, classConfidence, classAccuracy) {      
+		function drawCharts(rows, gyroRows, classIndex, classConfidence, classAccuracy, f1Scores, accuracyScore) {      
       
 			var data = new google.visualization.DataTable();
 			data.addColumn('number', 'Time');
@@ -138,9 +138,12 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			barChartData.addColumn('string', 'N');
 			barChartData.addColumn('number', '%');		
 			barChartData.addRow(['Vom Tag', 100 * classAccuracy[0]]);//(100) * Math.random() + 1]);
-			barChartData.addRow(['Ox', 100 * classAccuracy[1]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['Ochs', 100 * classAccuracy[1]]);//(100) * Math.random() + 1]);
 			barChartData.addRow(['Pflug', 100 * classAccuracy[2]]);//(100) * Math.random() + 1]);
 			barChartData.addRow(['Alber', 100 * classAccuracy[3]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['MittelHaw', 100 * classAccuracy[4]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['OberHaw', 100 * classAccuracy[5]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['ZwerHaw', 100 * classAccuracy[6]]);//(100) * Math.random() + 1]);
 			var barChart = new google.visualization.ColumnChart(document.getElementById('barChart_div'));
 			barChart.draw(barChartData, barChartOptions);
 			
@@ -160,9 +163,13 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			}
 			document.getElementById('myImage').src= stanceImageString;
 			
+			// Accuracy Score
+			var accuracyScoreValue = 100 * accuracyScore;
+			document.getElementById("accuracyScore_value").innerHTML = "Accuracy: " +  accuracyScoreValue.toFixed(2) + "%";
+
 			// Gauge
 			var gaugeValue = classConfidence * 100;
-			document.getElementById("gauge_value").innerHTML = gaugeValue.toFixed(2) + " %";
+			document.getElementById("gauge_value").innerHTML = "Classification Confidence: " +  gaugeValue.toFixed(2) + "%";
 			if (gaugeValue > 50)
 				document.getElementById("gauge_value").style.color = "blue";
 			else if (gaugeValue < 25)
@@ -185,11 +192,14 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			var classIndexIn = JSON.parse(jsonData)['predictedClass'];
 			var classConfidence = JSON.parse(jsonData)['confidence'];
 			var classAccuracy = JSON.parse(jsonData)['classAccuracy'];
+			var f1Scores = JSON.parse(jsonData)['f1Scores'];
+			var accuracyScore = JSON.parse(jsonData)['accuracyScore'];
+			
 			console.log("jsonData: " + jsonData);
 			console.log("classAccuracy: " + classAccuracy);
 			
 			var latencyValue = (Date.now()/1000) - timeStampIn;
-			document.getElementById("latency_value").innerHTML = latencyValue.toFixed(3) + " seconds";
+			document.getElementById("latency_value").innerHTML = "Latency: " + latencyValue.toFixed(3) + "secs";
 
 			timeStampIn -= startTimestampSeconds; // Remove the starting time UTC for second graph numbers X
 
@@ -199,7 +209,7 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			gyroDataTable.shift();
                         gyroDataTable.push([timeStampIn, jsonDataIn[3], jsonDataIn[4], jsonDataIn[5]]);
 
-			drawCharts(dataTable, gyroDataTable, classIndexIn, classConfidence, classAccuracy);
+			drawCharts(dataTable, gyroDataTable, classIndexIn, classConfidence, classAccuracy, f1Scores, accuracyScore);
 		}
 
       $(function () {
@@ -225,8 +235,9 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 
 	<div align="right">		
 		<div style="float: left;" id="gauge_div"></div>
-		<h1 id="gauge_value" style="float: left;"></h1>
-		<h2 id="latency_value" style="float: left;"></h2>
+		<h3 id="gauge_value" style="float: left;"></h3>
+		<h3 id="accuracyScore_value" style="float: left;"></h3>
+		<h3 id="latency_value" style="float: left;"></h3>
 		<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
 	</div>
 	<ul id="messages"></ul>
