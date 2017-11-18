@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-  <title>Socket.IO chat</title>
+  <title>Longsword Deep Learning trainer</title>
       <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
@@ -140,7 +140,7 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			barChartData.addRow(['Vom Tag', 100 * classAccuracy[0]]);//(100) * Math.random() + 1]);
 			barChartData.addRow(['Ochs', 100 * classAccuracy[1]]);//(100) * Math.random() + 1]);
 			barChartData.addRow(['Pflug', 100 * classAccuracy[2]]);//(100) * Math.random() + 1]);
-			barChartData.addRow(['Alber', 100 * classAccuracy[3]]);//(100) * Math.random() + 1]);
+			barChartData.addRow(['Wechsel', 100 * classAccuracy[3]]);//(100) * Math.random() + 1]);
 			barChartData.addRow(['MittelHaw', 100 * classAccuracy[4]]);//(100) * Math.random() + 1]);
 			barChartData.addRow(['OberHaw', 100 * classAccuracy[5]]);//(100) * Math.random() + 1]);
 			barChartData.addRow(['ZwerHaw', 100 * classAccuracy[6]]);//(100) * Math.random() + 1]);
@@ -151,12 +151,18 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 				case 0:
 					stanceImageString = "/images/vomTag.jpg";
 					break;
-				case 2:
+				case 1:
 					stanceImageString = "/images/ox.jpg";
 					break;
-				case 1:
+				case 2:
 					stanceImageString = "/images/pflug.jpg";
 					break;
+				case 3:
+					stanceImageString = "/images/alber.jpg";
+					break;
+				case 4:
+				case 5:
+				case 6:
 				default:
 					stanceImageString = "/images/alber.jpg";
 					break;
@@ -235,9 +241,9 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 
 	<div align="right">		
 		<div style="float: left;" id="gauge_div"></div>
-		<h3 id="gauge_value" style="float: left;"></h3>
-		<h3 id="accuracyScore_value" style="float: left;"></h3>
-		<h3 id="latency_value" style="float: left;"></h3>
+		<h4 id="gauge_value" style="float: left;"></h4>
+		<h4 id="accuracyScore_value" style="float: left;"></h4>
+		<h4 id="latency_value" style="float: left;"></h4>
 		<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
 	</div>
 	<ul id="messages"></ul>
