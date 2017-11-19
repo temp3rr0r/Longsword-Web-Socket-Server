@@ -21,7 +21,7 @@
 	
 		google.charts.load('current', {'packages':['corechart', 'gauge']});
 		var options = {'title':'Accelerometer',
-		  width: 600,
+		  width: 400,
 		  height: 300,
 		  vAxis: {minValue:-32536, maxValue:+32536},
 		  animation: {
@@ -43,7 +43,7 @@
 		};
 		
 		var gyroOptions = {'title':'Gyroscope',
-		  width: 600,
+		  width: 400,
 		  height: 300,
 		  vAxis: {minValue:-32536, maxValue:+32536},
 		  animation: {
@@ -65,7 +65,7 @@
 		};
 		
 	   var barChartOptions = {'title':'Technique Accuracy',
-		  width: 600,
+		  width: 400,
 		  height: 300,
 		  animation:{
 			duration: 500,
@@ -158,11 +158,17 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 					stanceImageString = "/images/pflug.jpg";
 					break;
 				case 3:
-					stanceImageString = "/images/alber.jpg";
+					stanceImageString = "/images/wechsel.jpg";
 					break;
 				case 4:
+					stanceImageString = "/images/mittelhaw.jpg";
+					break;
 				case 5:
+					stanceImageString = "/images/oberhaw.jpg";
+					break;
 				case 6:
+					stanceImageString = "/images/zwerhaw.jpg";
+					break;
 				default:
 					stanceImageString = "/images/alber.jpg";
 					break;
@@ -176,16 +182,16 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			// Gauge
 			var gaugeValue = classConfidence * 100;
 			document.getElementById("gauge_value").innerHTML = "Classification Confidence: " +  gaugeValue.toFixed(2) + "%";
-			if (gaugeValue > 50)
-				document.getElementById("gauge_value").style.color = "blue";
-			else if (gaugeValue < 25)
-				document.getElementById("gauge_value").style.color = "red";
-			else
-				document.getElementById("gauge_value").style.color = "green";
+			//if (gaugeValue > 50)
+			//	document.getElementById("gauge_value").style.color = "blue";
+			//else if (gaugeValue < 25)
+			//	document.getElementById("gauge_value").style.color = "red";
+			//else
+			//	document.getElementById("gauge_value").style.color = "green";
 			
 			 var gaugeData = google.visualization.arrayToDataTable([
 			  ['Label', 'Value'],
-			  ['Score', gaugeValue]
+			  ['Score', accuracyScoreValue.toFixed(2)]
 			]);        
 			var gaugeChart = new google.visualization.Gauge(document.getElementById('gauge_div'));
 			gaugeChart.draw(gaugeData, gaugeOptions);
@@ -201,8 +207,8 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			var f1Scores = JSON.parse(jsonData)['f1Scores'];
 			var accuracyScore = JSON.parse(jsonData)['accuracyScore'];
 			
-			console.log("jsonData: " + jsonData);
-			console.log("classAccuracy: " + classAccuracy);
+			//console.log("jsonData: " + jsonData);
+			//console.log("classAccuracy: " + classAccuracy);
 			
 			var latencyValue = (Date.now()/1000) - timeStampIn;
 			document.getElementById("latency_value").innerHTML = "Latency: " + latencyValue.toFixed(3) + "secs";
@@ -234,18 +240,19 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 	</head>
 	<body>    
 		<div style="width: 100%; overflow: hidden;" style="float: left;">	
+			<div id="gauge_div" style="float: left;"></div>
+			<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
 			<div id="barChart_div" style="float: left;"></div>
 			<div id="chart_div" style="float: left;"></div>
-			<div id="gyro_div" style="float: left;"></div>
+			<div id="gyro_div" style="float: left;"></div>	
 		</div>
 
-	<div align="right">		
-		<div style="float: left;" id="gauge_div"></div>
-		<h4 id="gauge_value" style="float: left;"></h4>
-		<h4 id="accuracyScore_value" style="float: left;"></h4>
-		<h4 id="latency_value" style="float: left;"></h4>
-		<img id="myImage" src="images/hemaStances.jpg" style="float: left;">
-	</div>
+	<!--div align="right"-->		
+
+		<h1 id="gauge_value" style="float: left;"> </h1>
+		<h1 id="accuracyScore_value" style="float: left;"> </h1>
+		<h1 id="latency_value" style="float: left;"> </h1>
+	<!--/div-->
 	<ul id="messages"></ul>
 	</body>
 </html>
