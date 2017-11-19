@@ -86,27 +86,10 @@
 		
 var startTimestampSeconds = Math.floor(Date.now() / 1000);
 
-var dataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
-	[startTimestampSeconds - 9, 5260, -21150, 14000],
-	[startTimestampSeconds - 8, 3100, 2250, 12200],
-	[startTimestampSeconds - 7, -21500, 24050, 11800],
-	[startTimestampSeconds - 6, -25000, 10050, 11400]
-	[startTimestampSeconds - 5, 32536, -32536, 14300],
-	[startTimestampSeconds - 4, 5260, -21150, 14000],
-	[startTimestampSeconds - 3, 3100, 2250, 12200],
-	[startTimestampSeconds - 2, -21500, 24050, 11800],
-	[startTimestampSeconds - 1, -25000, 10050, 11400]];
+var dataTable = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
 
-var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
-	[startTimestampSeconds - 9, 5260, -21150, 14000],
-	[startTimestampSeconds - 8, 3100, 2250, 12200],
-	[startTimestampSeconds - 7, -21500, 24050, 11800],
-	[startTimestampSeconds - 6, -25000, 10050, 11400]
-	[startTimestampSeconds - 5, 32536, -32536, 14300],
-	[startTimestampSeconds - 4, 5260, -21150, 14000],
-	[startTimestampSeconds - 3, 3100, 2250, 12200],
-	[startTimestampSeconds - 2, -21500, 24050, 11800],
-	[startTimestampSeconds - 1, -25000, 10050, 11400]];
+
+var gyroDataTable = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
 	
 		function drawCharts(rows, gyroRows, classIndex, classConfidence, classAccuracy, f1Scores, accuracyScore) {      
       
@@ -147,41 +130,52 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			var barChart = new google.visualization.ColumnChart(document.getElementById('barChart_div'));
 			barChart.draw(barChartData, barChartOptions);
 			
+			var classLabelString = "";
 			switch (classIndex) {
 				case 0:
 					stanceImageString = "/images/vomTag.jpg";
+					classLabelString = "Vom Tag";
 					break;
 				case 1:
 					stanceImageString = "/images/ox.jpg";
+					classLabelString = "Ochs";
 					break;
 				case 2:
 					stanceImageString = "/images/pflug.jpg";
+					classLabelString = "Pflug";
 					break;
 				case 3:
 					stanceImageString = "/images/wechsel.jpg";
+					classLabelString = "Wechsel";
 					break;
 				case 4:
 					stanceImageString = "/images/mittelhaw.jpg";
+					classLabelString = "Mittel Haw";
 					break;
 				case 5:
 					stanceImageString = "/images/oberhaw.jpg";
+					classLabelString = "Ober Haw";
 					break;
 				case 6:
 					stanceImageString = "/images/zwerhaw.jpg";
+					classLabelString = "Zwer Haw";
 					break;
 				default:
-					stanceImageString = "/images/alber.jpg";
+					stanceImageString = "/images/vomTag.jpg";
+					classLabelString = "Vom Tag";
 					break;
 			}
 			document.getElementById('myImage').src= stanceImageString;
 			
 			// Accuracy Score
 			var accuracyScoreValue = 100 * accuracyScore;
-			document.getElementById("accuracyScore_value").innerHTML = "Accuracy: " +  accuracyScoreValue.toFixed(2) + "%";
+
+			document.getElementById("accuracyScore_value").innerHTML = "| Accuracy: " +  accuracyScoreValue.toFixed(2) + "%";
+			document.getElementById("class_label").innerHTML = "| Class: " + classLabelString + " |";
 
 			// Gauge
 			var gaugeValue = classConfidence * 100;
-			document.getElementById("gauge_value").innerHTML = "Classification Confidence: " +  gaugeValue.toFixed(2) + "%";
+			document.getElementById("gauge_value").innerHTML = "| Classification Confidence: " +  gaugeValue.toFixed(2) + "% |";
 			//if (gaugeValue > 50)
 			//	document.getElementById("gauge_value").style.color = "blue";
 			//else if (gaugeValue < 25)
@@ -211,7 +205,7 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			//console.log("classAccuracy: " + classAccuracy);
 			
 			var latencyValue = (Date.now()/1000) - timeStampIn;
-			document.getElementById("latency_value").innerHTML = "Latency: " + latencyValue.toFixed(3) + "secs";
+			document.getElementById("latency_value").innerHTML = "Latency: " + latencyValue.toFixed(3) + "secs |";
 
 			timeStampIn -= startTimestampSeconds; // Remove the starting time UTC for second graph numbers X
 
@@ -246,12 +240,12 @@ var gyroDataTable = [[startTimestampSeconds - 10, 32536, -32536, 14300],
 			<div id="chart_div" style="float: left;"></div>
 			<div id="gyro_div" style="float: left;"></div>	
 		</div>
-
 	<!--div align="right"-->		
-
-		<h1 id="gauge_value" style="float: left;"> </h1>
-		<h1 id="accuracyScore_value" style="float: left;"> </h1>
-		<h1 id="latency_value" style="float: left;"> </h1>
+		
+		<h1 id="latency_value" style="float: left;"></h1>
+		<h1 id="class_label" style="float: left;"></h1>
+		<h1 id="gauge_value" style="float: left;"></h1>
+		<h1 id="accuracyScore_value" style="float: left;"></h1>
 	<!--/div-->
 	<ul id="messages"></ul>
 	</body>
