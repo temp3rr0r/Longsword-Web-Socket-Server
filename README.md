@@ -1,5 +1,7 @@
 # Longsword Web Socket Server #
 
+Working demo: https://www.youtube.com/watch?v=v7hvOyPQ0EM
+
 Longsword Web Socket Server: Provides live sensor data feed, stance classification view & scores/confidence %. The web-page is being served by node-js. An active web-socket connection is being mainted with the RESTful deep learning model service. The messages push real-time data and classification results to the web page's graphs.
 
 ## Technologies
